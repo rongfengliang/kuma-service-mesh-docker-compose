@@ -1,0 +1,48 @@
+version: "3"
+services:
+    postgres:
+      image: postgres
+      ports:
+      - "5432:5432"
+      environment:
+      - "POSTGRES_PASSWORD=dalong"
+      - "POSTGRES_DB=kuma"
+    kuma-cp: 
+      image: kong-docker-kuma-docker.bintray.io/kuma-cp:0.1.1
+      command: run --log-level=info
+      environment:
+      - "KUMA_STORE_TYPE=postgres"
+      - "KUMA_STORE_POSTGRES_HOST=postgres"
+      - "KUMA_BOOTSTRAP_SERVER_PARAMS_XDS_HOST=kuma-cp"
+      - "KUMA_STORE_POSTGRES_PORT=5432"
+      - "KUMA_STORE_POSTGRES_USER=postgres"
+      - "KUMA_STORE_POSTGRES_PASSWORD=dalong"
+      - "KUMA_STORE_POSTGRES_DB_NAME=kuma"
+    kuma-dp-echo:
+      build: ./
+      image:  dalongrong/kuma-tcp-echo
+      volumes:
+      - "./service.yaml:/opt/service.yaml"
+      - "./config2:/tmp/kuma.io/envoy"
+      environment:
+      - "KUMA_DATAPLANE_ADMIN_PORT=9901"
+      - "KUMA_CONTROL_PLANE_BOOTSTRAP_SERVER_URL=http://kuma-cp:5682"
+      - "KUMA_DATAPLANE_MESH=default"
+      - "KUMA_DATAPLANE_NAME=dp-echo-1"
+      ports:
+      - "8000:8000"
+      - "10000:10000"
+    kuma-dp-echo2:
+      build: ./
+      image:  dalongrong/kuma-tcp-echo
+      volumes:
+      - "./service2.yaml:/opt/service.yaml"
+      - "./config3:/tmp/kuma.io/envoy"
+      environment:
+      - "KUMA_DATAPLANE_ADMIN_PORT=9901"
+      - "KUMA_CONTROL_PLANE_BOOTSTRAP_SERVER_URL=http://kuma-cp:5682"
+      - "KUMA_DATAPLANE_MESH=default"
+      - "KUMA_DATAPLANE_NAME=dp-echo-2"
+      ports:
+      - "8001:8000"
+      - "10001:10000"

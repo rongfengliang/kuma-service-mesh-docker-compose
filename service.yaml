@@ -1,0 +1,8 @@
+type: Dataplane
+mesh: default
+name: dp-echo-1
+networking:
+  inbound:
+  - interface: 0.0.0.0:10000:8000
+    tags:
+      service: echo
