@@ -5,4 +5,4 @@ networking:
   inbound:
   - interface: 0.0.0.0:10000:8000
     tags:
-      service: echo
+      service: echo2

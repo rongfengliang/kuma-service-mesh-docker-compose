@@ -15,7 +15,7 @@ dynamicResources:
   ldsConfig:
     ads: {}
 node:
-  cluster: echo
+  cluster: echo2
   id: default.dp-echo-2.default
 staticResources:
   clusters:
